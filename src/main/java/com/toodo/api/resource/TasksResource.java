@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.toodo.api.model.Tasks;
 import com.toodo.api.repository.TasksRepository;
 import com.toodo.api.service.TasksService;
@@ -56,10 +55,25 @@ public class TasksResource {
         return ResponseEntity.ok(tasksSalva);
     }
 	
+	@PutMapping("/all")
+	public List<Tasks> atualizarTudo() {
+		List<Tasks> tasks = tasksRepository.findAll();
+
+		tasks.forEach(t -> t.setStatus("doing"));
+
+		return tasksRepository.saveAll(tasks);
+	}
+	
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long id) {
 		tasksRepository.deleteById(id);
+	}
+	
+	@DeleteMapping("/all")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void removerAll() {
+		tasksRepository.deleteAll();
 	}
 
 }
